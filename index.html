@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>V.A.Z.I.O | Arquivo Investigativo Classificado</title>
+
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+
+<style>
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #0b0f1a;
+  color: #cfd7ff;
+  font-family: 'JetBrains Mono', monospace;
+  overflow-x: hidden;
+}
+
+/* CRT Scanline Effect */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.03),
+    rgba(0, 0, 0, 0.03) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+header {
+  border-bottom: 2px solid #2e3f8f;
+  padding: 25px;
+  background: linear-gradient(180deg, #0f1425 0%, #0b0f1a 100%);
+  box-shadow: 0 4px 15px rgba(0, 100, 255, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+h1 {
+  margin: 0;
+  color: #66b3ff;
+  letter-spacing: 3px;
+  font-size: 1.8rem;
+  text-shadow: 0 0 15px rgba(102, 179, 255, 0.4);
+}
+
+.subtitle {
+  color: #7fbfff;
+  font-size: 0.85rem;
+  margin-top: 5px;
+  letter-spacing: 2px;
+}
+
+nav {
+  margin-top: 15px;
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+nav button {
+  background: none;
+  border: none;
+  color: #7fbfff;
+  font-family: 'JetBrains Mono';
+  cursor: pointer;
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 5px 0;
+}
+
+nav button::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #66b3ff;
+  transition: width 0.3s ease;
+}
+
+nav button:hover {
+  color: #66b3ff;
+}
+
+nav button:hover::after {
+  width: 100%;
+}
+
+nav button.active {
+  color: #66b3ff;
+  text-shadow: 0 0 10px rgba(102, 179, 255, 0.6);
+}
+
+main {
+  max-width: 1100px;
+  margin: auto;
+  padding: 30px 20px;
+}
+
+section {
+  display: none;
+  animation: fadeIn 0.5s ease;
+}
+
+section.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.panel {
+  border: 1px solid #2e3f8f;
+  padding: 25px;
+  margin-bottom: 25px;
+  background: linear-gradient(135deg, rgba(15, 20, 37, 0.8) 0%, rgba(11, 15, 26, 0.8) 100%);
+  box-shadow: 0 0 20px rgba(46, 63, 143, 0.3), inset 0 0 10px rgba(102, 179, 255, 0.05);
+  transition: all 0.3s ease;
+  border-radius: 2px;
+}
+
+.panel:hover {
+  border-color: #66b3ff;
+  box-shadow: 0 0 30px rgba(46, 63, 143, 0.5), inset 0 0 15px rgba(102, 179, 255, 0.08);
+}
+
+.panel h2 {
+  margin-top: 0;
+  color: #66b3ff;
+  margin-bottom: 15px;
+  letter-spacing: 2px;
+  font-size: 1.3rem;
+  border-bottom: 1px solid #2e3f8f;
+  padding-bottom: 10px;
+}
+
+.status-bar {
+  display: flex;
+  gap: 2rem;
+  margin: 15px 0;
+  font-size: 0.85rem;
+  color: #8899cc;
+  padding: 10px 0;
+  border-top: 1px solid #2e3f8f;
+  border-bottom: 1px solid #2e3f8f;
+}
+
+.status-item {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #66b3ff;
+  box-shadow: 0 0 8px rgba(102, 179, 255, 0.8);
+}
+
+.case {
+  background: rgba(15, 20, 37, 0.5);
+  border-left: 3px solid #4d99ff;
+  padding: 15px;
+  margin: 12px 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 2px;
+}
+
+.case:hover {
+  background: rgba(15, 20, 37, 0.8);
+  border-left-color: #66b3ff;
+  transform: translateX(5px);
+  box-shadow: 0 0 15px rgba(102, 179, 255, 0.2);
+}
+
+.case-title {
+  color: #66b3ff;
+  font-weight: 700;
+  margin-bottom: 5px;
+  letter-spacing: 1px;
+}
+
+.case-date {
+  color: #7a8ba3;
+  font-size: 0.8rem;
+  margin-bottom: 8px;
+}
+
+.case-content {
+  color: #a8b5d1;
+  line-height: 1.6;
+}
+
+.classified {
+  display: inline-block;
+  border: 2px solid #ff6666;
+  color: #ff6666;
+  padding: 5px 12px;
+  margin: 10px 0;
+  font-weight: 700;
+  letter-spacing: 2px;
+  transform: rotate(-15deg);
+  text-shadow: 0 0 8px rgba(255, 102, 102, 0.5);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.cipher {
+  text-align: center;
+  padding: 12px;
+  border: 1px solid #2e3f8f;
+  background: rgba(15, 30, 60, 0.3);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+.cipher:hover {
+  background: rgba(15, 30, 60, 0.7);
+  border-color: #66b3ff;
+  box-shadow: 0 0 12px rgba(102, 179, 255, 0.3);
+}
+
+.cipher-letter {
+  color: #8899cc;
+  font-size: 0.85rem;
+  margin-bottom: 5px;
+}
+
+.cipher-symbol {
+  color: #66b3ff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-shadow: 0 0 8px rgba(102, 179, 255, 0.5);
+}
+
+textarea {
+  width: 100%;
+  height: 120px;
+  background: #0c1124;
+  color: #cfd7ff;
+  border: 1px solid #2e3f8f;
+  font-family: 'JetBrains Mono';
+  padding: 12px;
+  transition: all 0.3s ease;
+  border-radius: 2px;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #66b3ff;
+  box-shadow: 0 0 15px rgba(102, 179, 255, 0.3);
+}
+
+.output {
+  border: 1px solid #2e3f8f;
+  padding: 15px;
+  margin-top: 10px;
+  min-height: 60px;
+  color: #66b3ff;
+  background: rgba(12, 17, 36, 0.8);
+  word-break: break-all;
+  border-radius: 2px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.empty-output {
+  color: #6e7dbb;
+  font-weight: 400;
+  font-style: italic;
+}
+
+button.action {
+  margin-top: 10px;
+  margin-right: 10px;
+  padding: 10px 18px;
+  background: linear-gradient(135deg, #1b2b6b 0%, #0f1f4f 100%);
+  border: 1px solid #66b3ff;
+  color: #66b3ff;
+  cursor: pointer;
+  font-family: 'JetBrains Mono';
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(102, 179, 255, 0.2);
+  border-radius: 2px;
+}
+
+button.action:hover {
+  background: linear-gradient(135deg, #2d46a5 0%, #1f2f7f 100%);
+  box-shadow: 0 0 20px rgba(102, 179, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+footer {
+  margin-top: 40px;
+  padding: 20px;
+  border-top: 2px solid #2e3f8f;
+  text-align: center;
+  color: #6e7dbb;
+  background: linear-gradient(180deg, transparent 0%, rgba(15, 20, 37, 0.4) 100%);
+  font-size: 0.9rem;
+}
+
+.hidden {
+  display: none;
+  color: #ff9999;
+  margin-top: 15px;
+  background: rgba(255, 100, 100, 0.1);
+  border: 1px solid #ff6666;
+  padding: 12px;
+  border-radius: 2px;
+  animation: pulse 0.5s ease;
+}
+
+.hidden.revealed {
+  display: block;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+@media (max-width: 600px) {
+  h1 { font-size: 1.3rem; }
+  nav { gap: 0.8rem; }
+  nav button { font-size: 11px; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); }
+  button.action { padding: 8px 12px; font-size: 11px; }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- MENSAGEM ARG ESCONDIDA -->
+<!-- PROTOCOLO_DELTA_ATIVO -->
+
+<header>
+
+<h1>▲ V.A.Z.I.O ▼</h1>
+<div class="subtitle">AGÊNCIA DE INVESTIGAÇÃO PARANORMAL | LIBERTHIA | ARQUIVO CLASSIFICADO</div>
+
+<nav>
+<button class="nav-btn active" onclick="show('inicio')">INÍCIO</button>
+<button class="nav-btn" onclick="show('org')">ORGANIZAÇÃO</button>
+<button class="nav-btn" onclick="show('invest')">INVESTIGAÇÕES</button>
+<button class="nav-btn" onclick="show('alfabeto')">ALFABETO</button>
+<button class="nav-btn" onclick="show('codificador')">CODIFICADOR</button>
+<button class="nav-btn" onclick="show('arquivo')">ARQUIVO</button>
+</nav>
+
+</header>
+
+<main>
+
+<section id="inicio" class="active">
+
+<div class="panel">
+
+<h2>BEM-VINDO AO ARQUIVO</h2>
+
+<div class="status-bar">
+<div class="status-item"><div class="indicator"></div> Sistema Online</div>
+<div class="status-item"><div class="indicator"></div> Segurança: ALTA</div>
+<div class="status-item"><div class="indicator"></div> Nível Autorizado</div>
+</div>
+
+<p style="margin: 15px 0; line-height: 1.7;">
+Você acessou o sistema classificado da <b>V.A.Z.I.O</b> — Agência de Investigação Paranormal baseada na Ilha de Liberthia, responsável pela investigação de fenômenos sobrenaturais, atividades paranormais e manifestações de origem desconhecida.
+</p>
+
+<p style="margin: 15px 0; line-height: 1.7;">
+Este arquivo contém documentos de nossas investigações mais sensíveis. Prossiga com cautela. Todos os acessos são monitorados e registrados.
+</p>
+
+<p style="margin: 15px 0; color: #7a8ba3; font-size: 0.9rem;">
+<em>Missão: Investigar, documentar e neutralizar fenômenos paranormais além da compreensão científica convencional na Ilha de Liberthia.</em>
+</p>
+
+</div>
+
+<div class="panel">
+
+<h2>MANDATO OPERACIONAL</h2>
+
+<div class="status-bar">
+<div class="status-item"><span>Investigações Ativas:</span> <strong style="color: #66b3ff; margin-left: 0.5rem;">17</strong></div>
+<div class="status-item"><span>Sinais Decodificados:</span> <strong style="color: #66b3ff; margin-left: 0.5rem;">612</strong></div>
+<div class="status-item"><span>Documentos Classificados:</span> <strong style="color: #66b3ff; margin-left: 0.5rem;">3,847</strong></div>
+</div>
+
+</div>
+
+</section>
+
+<section id="org">
+
+<div class="panel">
+
+<h2>SOBRE A ORGANIZAÇÃO</h2>
+
+<p style="margin: 15px 0; line-height: 1.7;">
+<b>Fundada:</b> 1962 — Estabelecida na Ilha de Liberthia em resposta a atividades paranormais inusitadas detectadas na região.
+</p>
+
+<p style="margin: 15px 0; line-height: 1.7;">
+<b>Lema:</b> "Veritas in Obscuritate" — Verdade na Obscuridade
+</p>
+
+<p style="margin: 15px 0; line-height: 1.7;">
+<b>Localização:</b> Liberthia, Região Costeira Classificada
+</p>
+
+<p style="margin: 15px 0; line-height: 1.7;">
+A V.A.Z.I.O mantém o maior banco de dados global de investigações paranormais, fenômenos sobrenaturais documentados e contatos com entidades desconhecidas. Especializada em resolver casos que desafiam explicação racional.
+</p>
+
+</div>
+
+<div class="panel">
+
+<h2>DIVISÕES OPERACIONAIS</h2>
+
+<div class="case">
+<div class="case-title">▶ DIVISÃO ALFA — INVESTIGAÇÃO DE EVENTOS SOBRENATURAIS</div>
+<div class="case-date">Classificação: SECRETO</div>
+<div class="case-content">
+Especializada em responder a reportes de atividades paranormais, manifestações de entidades desconhecidas e fenômenos inexplicados. Agentes treinados em ocultismo, parapsicologia e defesa contra entidades sobrenaturais. Taxa de resolução: 68%.
+</div>
+</div>
+
+<div class="case">
+<div class="case-title">▶ DIVISÃO BETA — DOCUMENTAÇÃO E ANÁLISE</div>
+<div class="case-date">Classificação: SECRETO</div>
+<div class="case-content">
+Responsável por registrar, catalogar e analisar todos os fenômenos paranormais documentados. Mantém registros detalhados de atividades sobrenaturais em toda a Ilha de Liberthia e arredores. Todos os achados são criptografados e armazenados em aréis seguras.
+</div>
+</div>
+
+<div class="case">
+<div class="case-title">▶ DIVISÃO GAMA — ARQUIVO PARANORMAL</div>
+<div class="case-date">Classificação: ULTRA-SECRETO</div>
+<div class="case-content">
+Mantém o arquivo central de investigações paranormais, artefatos sobrenaturais catalogados e registros históricos de manifestações. Conecta padrões entre casos aparentemente desconexos. Biblioteca de ocultismo e reflexões paranormais.
+</div>
+</div>
+
+<div class="case">
+<div class="case-title">▶ DIVISÃO DELTA — PESQUISA OCULTA</div>
+<div class="case-date">Classificação: ULTRA-SECRETO</div>
+<div class="case-content">
+Conduz pesquisa avançada em fenômenos paranormais, teorias sobrenaturais e comunicação com entidades. Desenvolve métodos de proteção contra manifestações malevólas. Mantém registros de todo conhecimento paranormal adquirido.
+</div>
+</div>
+
+</div>
+
+</section>
+
+<section id="invest">
+
+<div class="panel">
+
+<h2>INVESTIGAÇÕES ATIVAS</h2>
+
+<div class="case">
+<div class="case-title">🔒 CASO #2024-CASCADE-01: FENÔMENO DE SILÊNCIO RADIOFÔNICO</div>
+<div class="case-date">Aberto: 2024-03-15 | Atualizado: 2025-12-09</div>
+<div class="case-content">
+Múltiplas estações de retransmissão em três continentes relataram perda simultânea de sinal com duração de 7 minutos e 43 segundos. Nenhuma falha de equipamento detectada. Causa: DESCONHECIDA.
+</div>
+</div>
+
+<div class="case">
+<div class="case-title">🔒 CASO #2024-VECTOR-08: ANOMALIA DE RECONHECIMENTO DE PADRÃO</div>
+<div class="case-date">Aberto: 2024-08-09 | Atualizado: 2025-12-03</div>
+<div class="case-content">
+Análise de 47 incidentes aparentemente desconexos ao longo de 30 anos revela padrão oculto indicando coordenação inteligente. Probabilidade de ocorrência aleatória: 0,003%.
+</div>
+</div>
+
+<div class="case">
+<div class="case-title">🔒 CASO #2025-ECHO-12: FLUTUAÇÃO DE FREQUÊNCIA DIMENSIONAL</div>
+<div class="case-date">Aberto: 2025-06-17 | Atualizado: 2025-12-10</div>
+<div class="case-content">
+Sensores quânticos detectaram oscilações sutis em medições de realidade básica. Oscilações parecem deliberadas. Origem: não identificada. STATUS: URGENTE.
+</div>
+</div>
+
+<div class="case">
+<div class="case-title">🔒 CASO #2025-SYMBOL-04: MENSAGEM CRIPTOGRAFADA EM ARQUIVO PÚBLICO</div>
+<div class="case-date">Aberto: 2025-09-21 | Atualizado: 2025-12-09</div>
+<div class="case-content">
+Uma mensagem codificada em nosso alfabeto cifrado foi descoberta em arquivos digitais públicos. Sugere comprometimento de segurança ou comunicação intencional de parte externa. Nível de Ameaça: CRÍTICO.
+</div>
+</div>
+
+</div>
+
+</section>
+
+<section id="alfabeto">
+
+<div class="panel">
+
+<h2>ALFABETO CIFRADO PROPRIETÁRIO</h2>
+
+<p style="margin: 15px 0; color: #9aa5d1; font-size: 0.9rem;">
+<em>Sistema de criptografia de Divisão Delta — Requisito de memorização obrigatória para pessoal autorizado.</em>
+</p>
+
+<div class="grid" id="grid"></div>
+
+</div>
+
+</section>
+
+<section id="codificador">
+
+<div class="panel">
+
+<h2>SISTEMA DE CODIFICAÇÃO SEGURA</h2>
+
+<p style="margin: 15px 0; color: #9aa5d1; font-size: 0.9rem;">
+Use esta ferramenta para codificar/decodificar comunicações sensíveis. Todos os acessos são registrados.
+</p>
+
+<textarea id="input" placeholder="Digite sua mensagem aqui..."></textarea>
+
+<br>
+
+<button class="action" onclick="encode()">CODIFICAR</button>
+<button class="action" onclick="decode()">DECODIFICAR</button>
+<button class="action" onclick="clearInput()">LIMPAR</button>
+<button class="action" onclick="copyOutput()">COPIAR SAÍDA</button>
+
+<div class="output" id="output">Aguardando mensagem...</div>
+
+<div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #2e3f8f; color: #8899cc; font-size: 0.85rem;">
+<p><strong>Notas:</strong></p>
+<ul style="margin-left: 20px;">
+<li>Letras maiúsculas e minúsculas são codificadas identicamente</li>
+<li>Números são preservados na saída</li>
+<li>Espaços e caracteres especiais são ignorados</li>
+</ul>
+</div>
+
+</div>
+
+</section>
+
+<section id="arquivo">
+
+<div class="panel">
+
+<h2>ARQUIVO CLASSIFICADO</h2>
+
+<p style="margin: 15px 0; color: #8899cc;">
+Documentos restringidos de acesso. Somente pessoal autorizado pode visualizar.
+</p>
+
+<div style="margin: 20px 0; padding: 15px; background: rgba(30, 20, 20, 0.5); border-left: 3px solid #ff6666;">
+
+<div class="classified">⊗ CLASSIFICADO ⊗</div>
+
+<div class="case-title" style="margin-top: 10px;">REGISTRO HISTÓRICO: PROJETO GENESIS (1962-1987)</div>
+<div class="case-date">Data de Desclassificação: NUNCA | Nível de Acesso: OLHOS SOMENTE</div>
+<div class="case-content">
+A V.A.Z.I.O foi estabelecida em 1962 na Ilha de Liberthia em resposta a uma série de incidentes paranormais inexplicáveis que afligiam a região. As operações iniciais focavam em investigação e documentação de atividades sobrenaturais. O escopo expandiu significativamente após o Evento Classificado de 1979, cujos detalhes completos permanecem selados no nível máximo de classificação.
+</div>
+
+</div>
+
+<div class="case">
+<div class="case-title" onclick="revealHidden()" style="cursor: pointer; color: #88ddff;">🔓 CLIQUE PARA ACESSAR: ENTRADA 2847</div>
+<div class="case-date">Último Acesso: [REDACTED] | Próxima Revisão: [REDACTED]</div>
+<div class="case-content">
+[Conteúdo requer verificação biométrica]
+</div>
+<div id="hidden" class="hidden">
+<span style="color: #ff9999; font-weight: 700;">⚠ ALERTA DE SEGURANÇA DO SISTEMA ⚠</span><br><br>
+Se você está lendo isto, o arquivo foi comprometido. A V.A.Z.I.O está ciente da invasão. Suas ações estão sendo monitoradas. Responda imediatamente à sequência de ativação DELTA-7: "Sabemos que você está procurando."
+</div>
+</div>
+
+<div class="case">
+<div class="case-title">AMOSTRA DE MENSAGEM CODIFICADA NO ARQUIVO</div>
+<div class="case-date">Recebida: 2025-11-30 | Origem: DESCONHECIDA</div>
+<div class="case-content">
+∆β¢·ΞϟŦ·Øβʝ
+</div>
+<div style="margin-top: 10px; color: #7a8ba3; font-size: 0.85rem;">
+<em>Dica: Esta mensagem pode ser decodificável usando o alfabeto cifrado acima.</em>
+</div>
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+<footer>
+
+V.A.Z.I.O | AGÊNCIA DE INVESTIGAÇÃO PARANORMAL
+<br>
+LIBERTHIA — CLASSIFICADO — PESSOAL AUTORIZADO APENAS
+<br><br>
+Se você está lendo isto, perguntas não devem ser feitas.
+
+</footer>
+
+<script>
+
+// Cipher Alphabet Mapping
+const cipher = {
+  A: '∆', B: 'β', C: '¢', D: 'Ð', E: 'Ξ', F: 'Ғ', G: 'Ǥ', H: 'Ħ', I: 'ɪ', J: 'ʝ',
+  K: 'Ҡ', L: 'Ł', M: 'ϻ', N: 'И', O: 'Ø', P: 'Ҏ', Q: 'Ҩ', R: 'Я', S: 'ϟ', T: 'Ŧ',
+  U: 'Ʊ', V: 'Ѵ', W: 'Ш', X: 'Ж', Y: 'Ұ', Z: 'Ƶ', ' ': '·'
+};
+
+// Reverse mapping for decoding
+const reverse = {};
+for (let k in cipher) {
+  reverse[cipher[k]] = k;
+}
+
+// Section Navigation
+function show(id) {
+  document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  
+  // Update active button
+  document.querySelectorAll(".nav-btn").forEach(btn => btn.classList.remove("active"));
+  event.target.classList.add("active");
+  
+  window.scrollTo(0, 0);
+}
+
+// Encoder function
+function encode() {
+  let text = document.getElementById("input").value.toUpperCase();
+  let out = "";
+  
+  for (let c of text) {
+    if (cipher[c]) out += cipher[c];
+    else if (/[0-9]/.test(c)) out += c;
+  }
+  
+  const output = document.getElementById("output");
+  if (out === "") {
+    output.textContent = "Nenhum caractere válido para codificar.";
+    output.classList.add("empty-output");
+  } else {
+    output.textContent = out;
+    output.classList.remove("empty-output");
+  }
+}
+
+// Decoder function
+function decode() {
+  let text = document.getElementById("input").value;
+  let out = "";
+  
+  for (let c of text) {
+    if (reverse[c]) out += reverse[c];
+    else if (/[0-9]/.test(c)) out += c;
+    else if (c !== ' ') out += c;
+  }
+  
+  const output = document.getElementById("output");
+  if (out === "") {
+    output.textContent = "Nenhum caractere válido para decodificar.";
+    output.classList.add("empty-output");
+  } else {
+    output.textContent = out;
+    output.classList.remove("empty-output");
+  }
+}
+
+// Clear input
+function clearInput() {
+  document.getElementById("input").value = "";
+  document.getElementById("output").textContent = "Aguardando mensagem...";
+  document.getElementById("output").classList.add("empty-output");
+}
+
+// Copy output to clipboard
+function copyOutput() {
+  const output = document.getElementById("output").textContent;
+  if (output !== "Aguardando mensagem..." && output !== "") {
+    navigator.clipboard.writeText(output).then(() => {
+      alert("Mensagem copiada para a área de transferência!");
+    });
+  }
+}
+
+// Reveal hidden message
+function revealHidden() {
+  const hidden = document.getElementById("hidden");
+  hidden.classList.toggle("revealed");
+}
+
+// Initialize cipher alphabet grid
+const grid = document.getElementById("grid");
+for (let k in cipher) {
+  let d = document.createElement("div");
+  d.className = "cipher";
+  d.innerHTML = `<div class="cipher-letter">${k}</div><div class="cipher-symbol">${cipher[k]}</div>`;
+  d.onclick = () => {
+    navigator.clipboard.writeText(cipher[k]);
+    d.style.background = "rgba(102, 179, 255, 0.3)";
+    setTimeout(() => { d.style.background = ""; }, 300);
+  };
+  grid.appendChild(d);
+}
+
+// Console Easter Eggs
+console.clear();
+console.log("%c▲ V.A.Z.I.O ▼", "color: #66b3ff; font-size: 18px; font-weight: bold; text-shadow: 0 0 10px rgba(102, 179, 255, 0.6);");
+console.log("%cAgência de Investigação Paranormal — Liberthia", "color: #8899cc; font-size: 12px; letter-spacing: 2px;");
+console.log(" ");
+console.log("%cSe você está lendo isto, você entende a importância do sigilo.", "color: #9aa5d1; font-size: 11px;");
+console.log("%cAtividades paranormais detectadas. A seguinte mensagem cifrada aguarda:", "color: #8899cc; font-size: 11px;");
+console.log("%c∆β¢·ΞϟŦ·Øβʝ", "color: #66b3ff; font-size: 13px; font-weight: bold; text-shadow: 0 0 10px rgba(102, 179, 255, 0.5);");
+console.log(" ");
+console.log("%cDecodifique usando nosso sistema de alfabeto cifrado.", "color: #7a8ba3; font-size: 10px; font-style: italic;");
+console.log(" ");
+console.log("%c>>> MONITORAMENTO PARANORMAL ATIVO <<<", "color: #66b3ff; font-size: 14px; font-weight: bold;");
+
+// Page visibility change
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    console.log("%c👁 Você saiu. Ainda estamos observando. 👁", "color: #ff9999; font-size: 12px; font-weight: bold;");
+  } else {
+    console.log("%c👁 Bem-vindo de volta. Sentimos sua falta. 👁", "color: #66b3ff; font-size: 12px; font-weight: bold;");
+  }
+});
+
+// Real-time encoding hint
+document.getElementById("input").addEventListener("keyup", function() {
+  if (this.value === "") {
+    document.getElementById("output").textContent = "Aguardando mensagem...";
+    document.getElementById("output").classList.add("empty-output");
+  }
+});
+
+</script>
+
+</body>
+</html>

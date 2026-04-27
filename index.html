@@ -1,39 +1,47 @@
-<!-- se você está lendo isso, você já passou da primeira camada -->
-<!-- 13-1-26-9-15 -->
-<!-- talvez não seja só números... talvez seja ordem -->
+<!-- se você está lendo isso, significa que você realmente observa -->
+<!-- e se o alfabeto fosse classificado por numeros? -->
+
+<!-- primeira chave: 22-1-26-9-15 -->
+
+<!-- continue procurando -->
 
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>V.A.Z.I.O | Sistema Classificado</title>
+<title>V.A.Z.I.O | Arquivo Investigativo Classificado</title>
 
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
 
 body{
-background:#0a0a0a;
+background:#111111;
 color:#cfd7ff;
 font-family:'JetBrains Mono', monospace;
-}
-
-.glitch{
-animation: glitch 1s infinite;
-}
-
-@keyframes glitch{
-0%{opacity:1;}
-50%{opacity:0.6;}
-100%{opacity:1;}
+overflow-x:hidden;
 }
 
 header{
-border-bottom:1px solid #1f2a5a;
-padding:20px;
+border-bottom:2px solid #2e3f8f;
+padding:25px;
+background:linear-gradient(180deg,#0f1425 0%,#0b0f1a 100%);
+position:sticky;
+top:0;
+}
+
+h1{
+color:#d6d6d6;
+letter-spacing:3px;
 }
 
 main{
@@ -43,71 +51,74 @@ padding:30px;
 }
 
 .panel{
-border:1px solid #1f2a5a;
-padding:20px;
-margin-bottom:20px;
-background:#0f1425;
-}
-
-.hidden{
-display:none;
-color:#ff5e5e;
-margin-top:15px;
-}
-
-.revealed{
-display:block;
+border:1px solid #2a2a2a;
+padding:25px;
+margin-bottom:25px;
+background:rgba(15,20,37,0.8);
 }
 
 input{
 width:100%;
-padding:10px;
-background:#000;
-border:1px solid #2e3f8f;
+padding:12px;
+background:#0c1124;
 color:#66b3ff;
+border:1px solid #2e3f8f;
 margin-top:10px;
 }
 
 button{
 margin-top:10px;
-padding:10px;
+padding:10px 18px;
 background:#1b2b6b;
 border:1px solid #66b3ff;
 color:#66b3ff;
 cursor:pointer;
 }
 
+.hidden{
+display:none;
+color:#ff5555;
+margin-top:10px;
+}
+
+.revealed{
+display:block;
+}
+
 .secret{
 display:none;
 margin-top:20px;
-border:1px solid #ff5e5e;
+border:1px solid #66b3ff;
 padding:15px;
 }
 
 audio{
-margin-top:10px;
 width:100%;
+margin-top:10px;
 }
+
 </style>
 </head>
 
 <body>
 
 <header>
-<h1 class="glitch">▲ V.A.Z.I.O ▼</h1>
+<h1>▲ V.A.Z.I.O ▼</h1>
 </header>
 
 <main>
 
 <div class="panel">
-<h2>SISTEMA</h2>
-<p>Você não deveria estar aqui.</p>
+<h2>BEM-VINDO</h2>
+<p>Você encontrou algo que não deveria.</p>
 </div>
 
 <div class="panel">
+
 <h2>ACESSO RESTRITO</h2>
 
-<p>Insira a chave:</p>
+<p>Digite a chave:</p>
+
 <input id="senha" placeholder="...">
 
 <button onclick="verificar()">VALIDAR</button>
@@ -117,15 +128,17 @@ width:100%;
 <div id="nivel2" class="secret">
 
 <p>Chave aceita.</p>
-<p>Mas você ainda não terminou.</p>
+
+<p>Nem tudo está visível.</p>
 
 <audio controls>
 <source src="SEU_AUDIO_AQUI.wav" type="audio/wav">
 </audio>
 
-<p>Dica: nem tudo se vê... alguns apenas escutam.</p>
+<p>Escute com atenção.</p>
 
 <input id="senha2" placeholder="segunda chave...">
+
 <button onclick="verificar2()">DESBLOQUEAR</button>
 
 <div id="erro2" class="hidden">INCORRETO</div>
@@ -133,15 +146,12 @@ width:100%;
 </div>
 
 <div id="final" class="secret">
+
 <h2>ACESSO CONCEDIDO</h2>
 
-<p>
-Eles observaram você.
-</p>
+<p>Eles sabem que você está aqui.</p>
 
-<p>
-/echo.html
-</p>
+<p>/echo.html</p>
 
 </div>
 
@@ -151,12 +161,12 @@ Eles observaram você.
 
 <script>
 
-// PRIMEIRA SENHA (13-1-26-9-15 → MAZIO)
+// PRIMEIRA SENHA (VAZIO)
 function verificar(){
 
 let s = document.getElementById("senha").value.toUpperCase()
 
-if(s === "MAZIO"){
+if(s === "VAZIO"){
 document.getElementById("nivel2").style.display="block"
 document.getElementById("erro").classList.remove("revealed")
 }else{
@@ -165,12 +175,12 @@ document.getElementById("erro").classList.add("revealed")
 
 }
 
-// SEGUNDA SENHA (ÁUDIO MORSE)
+// SEGUNDA SENHA (MUDA SE QUISER)
 function verificar2(){
 
 let s = document.getElementById("senha2").value.toUpperCase()
 
-if(s === "ECHO"){ // MUDA AQUI SE QUISER
+if(s === "ECHO"){
 document.getElementById("final").style.display="block"
 document.getElementById("erro2").classList.remove("revealed")
 }else{

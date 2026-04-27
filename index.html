@@ -1,451 +1,183 @@
-<!-- se você está lendo isso, significa que você realmente observa, e se o alfabeto fosse classificado por numeros? -->
-
-<!-- primeira chave: 13-1-26-9-15 -->
-
-<!-- continue procurando -->
+<!-- se você está lendo isso, você já passou da primeira camada -->
+<!-- 13-1-26-9-15 -->
+<!-- talvez não seja só números... talvez seja ordem -->
 
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>V.A.Z.I.O | Arquivo Investigativo Classificado</title>
+<title>V.A.Z.I.O | Sistema Classificado</title>
 
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
 
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box;}
 
 body{
-background:#111111;
+background:#0a0a0a;
 color:#cfd7ff;
 font-family:'JetBrains Mono', monospace;
-overflow-x:hidden;
 }
 
-body::after{
-content:'';
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:repeating-linear-gradient(
-0deg,
-rgba(0,0,0,0.03),
-rgba(0,0,0,0.03) 1px,
-transparent 1px,
-transparent 2px
-);
-pointer-events:none;
-z-index:9999;
+.glitch{
+animation: glitch 1s infinite;
+}
+
+@keyframes glitch{
+0%{opacity:1;}
+50%{opacity:0.6;}
+100%{opacity:1;}
 }
 
 header{
-border-bottom:2px solid #2e3f8f;
-padding:25px;
-background:linear-gradient(180deg,#0f1425 0%,#0b0f1a 100%);
-position:sticky;
-top:0;
-z-index:100;
-}
-
-h1{
-color:#d6d6d6;
-letter-spacing:3px;
-font-size:1.8rem;
-}
-
-.subtitle{
-color:#a0a0a0;
-font-size:0.85rem;
-margin-top:5px;
-letter-spacing:2px;
-}
-
-nav{
-margin-top:15px;
-display:flex;
-gap:1.5rem;
-flex-wrap:wrap;
-}
-
-nav button{
-background:none;
-border:none;
-color:#7fbfff;
-font-family:'JetBrains Mono';
-cursor:pointer;
-font-size:13px;
-letter-spacing:1px;
-text-transform:uppercase;
-position:relative;
-}
-
-nav button.active{
-color:#66b3ff;
+border-bottom:1px solid #1f2a5a;
+padding:20px;
 }
 
 main{
-max-width:1100px;
+max-width:900px;
 margin:auto;
-padding:30px 20px;
-}
-
-section{
-display:none;
-}
-
-section.active{
-display:block;
+padding:30px;
 }
 
 .panel{
-border:1px solid #2a2a2a;
-padding:25px;
-margin-bottom:25px;
-background:rgba(15,20,37,0.8);
+border:1px solid #1f2a5a;
+padding:20px;
+margin-bottom:20px;
+background:#0f1425;
 }
 
-.panel h2{
-color:#66b3ff;
-margin-bottom:15px;
+.hidden{
+display:none;
+color:#ff5e5e;
+margin-top:15px;
 }
 
-.case{
-background:rgba(15,20,37,0.5);
-border-left:3px solid #4d99ff;
-padding:15px;
-margin:12px 0;
-cursor:pointer;
+.revealed{
+display:block;
 }
 
-.case-title{
-color:#66b3ff;
-font-weight:700;
-margin-bottom:5px;
-}
-
-.case-date{
-color:#7a8ba3;
-font-size:0.8rem;
-margin-bottom:8px;
-}
-
-.case-content{
-color:#a8b5d1;
-line-height:1.6;
-}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(100px,1fr));
-gap:10px;
-margin-top:20px;
-}
-
-.cipher{
-text-align:center;
-padding:12px;
-border:1px solid #2e3f8f;
-cursor:pointer;
-}
-
-.cipher-symbol{
-color:#66b3ff;
-font-size:1.4rem;
-}
-
-textarea{
+input{
 width:100%;
-height:120px;
-background:#0c1124;
-color:#cfd7ff;
+padding:10px;
+background:#000;
 border:1px solid #2e3f8f;
-font-family:'JetBrains Mono';
-padding:12px;
-}
-
-.output{
-border:1px solid #2e3f8f;
-padding:15px;
-margin-top:10px;
-min-height:60px;
 color:#66b3ff;
+margin-top:10px;
 }
 
-button.action{
+button{
 margin-top:10px;
-margin-right:10px;
-padding:10px 18px;
+padding:10px;
 background:#1b2b6b;
 border:1px solid #66b3ff;
 color:#66b3ff;
 cursor:pointer;
 }
 
-footer{
-margin-top:40px;
-padding:20px;
-border-top:2px solid #2e3f8f;
-text-align:center;
-color:#6e7dbb;
-}
-
-.hidden{
+.secret{
 display:none;
-color:#ff9999;
-margin-top:15px;
+margin-top:20px;
+border:1px solid #ff5e5e;
+padding:15px;
 }
 
-.hidden.revealed{
-display:block;
+audio{
+margin-top:10px;
+width:100%;
 }
-
 </style>
 </head>
 
 <body>
 
 <header>
-
-<h1>▲ V.A.Z.I.O ▼</h1>
-<div class="subtitle">AGÊNCIA DE INVESTIGAÇÃO PARANORMAL | LIBERTHIA</div>
-
-<nav>
-
-<button class="nav-btn active" data-target="inicio">INÍCIO</button>
-<button class="nav-btn" data-target="org">ORGANIZAÇÃO</button>
-<button class="nav-btn" data-target="invest">INVESTIGAÇÕES</button>
-<button class="nav-btn" data-target="alfabeto">ALFABETO</button>
-<button class="nav-btn" data-target="codificador">CODIFICADOR</button>
-<button class="nav-btn" data-target="arquivo">ARQUIVO</button>
-
-</nav>
-
+<h1 class="glitch">▲ V.A.Z.I.O ▼</h1>
 </header>
 
 <main>
 
-<section id="inicio" class="active">
+<div class="panel">
+<h2>SISTEMA</h2>
+<p>Você não deveria estar aqui.</p>
+</div>
 
 <div class="panel">
+<h2>ACESSO RESTRITO</h2>
 
-<h2>BEM-VINDO AO ARQUIVO</h2>
+<p>Insira a chave:</p>
+<input id="senha" placeholder="...">
+
+<button onclick="verificar()">VALIDAR</button>
+
+<div id="erro" class="hidden">ACESSO NEGADO</div>
+
+<div id="nivel2" class="secret">
+
+<p>Chave aceita.</p>
+<p>Mas você ainda não terminou.</p>
+
+<audio controls>
+<source src="SEU_AUDIO_AQUI.wav" type="audio/wav">
+</audio>
+
+<p>Dica: nem tudo se vê... alguns apenas escutam.</p>
+
+<input id="senha2" placeholder="segunda chave...">
+<button onclick="verificar2()">DESBLOQUEAR</button>
+
+<div id="erro2" class="hidden">INCORRETO</div>
+
+</div>
+
+<div id="final" class="secret">
+<h2>ACESSO CONCEDIDO</h2>
 
 <p>
-Você acessou o sistema classificado da <b>V.A.Z.I.O</b>.
+Eles observaram você.
+</p>
+
+<p>
+/echo.html
 </p>
 
 </div>
 
-</section>
-
-<section id="org">
-
-<div class="panel">
-
-<h2>SOBRE A ORGANIZAÇÃO</h2>
-
-<p>
-Fundada em 2025 para investigar fenômenos paranormais.
-</p>
-
 </div>
-
-</section>
-
-<section id="invest">
-
-<div class="panel">
-
-<h2>INVESTIGAÇÕES ATIVAS</h2>
-
-<div class="case">
-<div class="case-title">CASO #2025-ECHO</div>
-<div class="case-content">
-Oscilações na realidade detectadas.
-</div>
-</div>
-
-</div>
-
-</section>
-
-<section id="alfabeto">
-
-<div class="panel">
-
-<h2>ALFABETO CIFRADO</h2>
-
-<div class="grid" id="grid"></div>
-
-</div>
-
-</section>
-
-<section id="codificador">
-
-<div class="panel">
-
-<h2>CODIFICADOR</h2>
-
-<textarea id="input"></textarea>
-
-<br>
-
-<button class="action" id="btnEncode">CODIFICAR</button>
-<button class="action" id="btnDecode">DECODIFICAR</button>
-<button class="action" id="btnClear">LIMPAR</button>
-<button class="action" id="btnCopy">COPIAR</button>
-
-<div class="output" id="output">Aguardando mensagem...</div>
-
-</div>
-
-</section>
-
-<section id="arquivo">
-
-<div class="panel">
-
-<h2>ARQUIVO CLASSIFICADO</h2>
-
-<div class="case">
-<div class="case-title" id="openHidden">🔓 ENTRADA 2847</div>
-
-<div id="hidden" class="hidden">
-ALERTA DE SEGURANÇA DO SISTEMA
-</div>
-
-</div>
-
-</div>
-
-</section>
 
 </main>
 
-<footer>
-
-V.A.Z.I.O — SISTEMA CLASSIFICADO
-
-</footer>
-
 <script>
 
-const cipher = {
-A:'⟡', B:'⟢', C:'⟣', D:'⟤', E:'⟥',
-F:'⟦', G:'⟧', H:'⟪', I:'⟫', J:'⟬',
-K:'⟭', L:'⟮', M:'⟯', N:'⟰', O:'⟱',
-P:'⟲', Q:'⟳', R:'⟴', S:'⟵', T:'⟶',
-U:'⟷', V:'⟸', W:'⟹', X:'⟺', Y:'⟻',
-Z:'⟼', ' ':'·'
-};
+// PRIMEIRA SENHA (13-1-26-9-15 → MAZIO)
+function verificar(){
 
-const reverse={}
+let s = document.getElementById("senha").value.toUpperCase()
 
-for(let k in cipher){
-reverse[cipher[k]]=k
+if(s === "MAZIO"){
+document.getElementById("nivel2").style.display="block"
+document.getElementById("erro").classList.remove("revealed")
+}else{
+document.getElementById("erro").classList.add("revealed")
 }
-
-const grid=document.getElementById("grid")
-
-for(let k in cipher){
-
-const d=document.createElement("div")
-
-d.className="cipher"
-
-d.innerHTML=`
-<div>${k}</div>
-<div class="cipher-symbol">${cipher[k]}</div>
-`
-
-d.onclick=()=>{
-navigator.clipboard.writeText(cipher[k])
-}
-
-grid.appendChild(d)
 
 }
 
-function encode(){
+// SEGUNDA SENHA (ÁUDIO MORSE)
+function verificar2(){
 
-let text=document.getElementById("input").value.toUpperCase()
+let s = document.getElementById("senha2").value.toUpperCase()
 
-let out=""
-
-for(let c of text){
-
-if(cipher[c]) out+=cipher[c]
-
+if(s === "ECHO"){ // MUDA AQUI SE QUISER
+document.getElementById("final").style.display="block"
+document.getElementById("erro2").classList.remove("revealed")
+}else{
+document.getElementById("erro2").classList.add("revealed")
 }
 
-document.getElementById("output").textContent=out||"Nada para codificar"
-
 }
-
-function decode(){
-
-let text=document.getElementById("input").value
-
-let out=""
-
-for(let c of text){
-
-if(reverse[c]) out+=reverse[c]
-
-}
-
-document.getElementById("output").textContent=out||"Nada para decodificar"
-
-}
-
-document.getElementById("btnEncode").onclick=encode
-document.getElementById("btnDecode").onclick=decode
-
-document.getElementById("btnClear").onclick=()=>{
-document.getElementById("input").value=""
-document.getElementById("output").textContent="Aguardando mensagem..."
-}
-
-document.getElementById("btnCopy").onclick=()=>{
-navigator.clipboard.writeText(
-document.getElementById("output").textContent
-)
-}
-
-document.getElementById("openHidden").onclick=()=>{
-document.getElementById("hidden").classList.toggle("revealed")
-}
-
-document.querySelectorAll(".nav-btn").forEach(btn=>{
-btn.onclick=()=>{
-
-document.querySelectorAll("section").forEach(s=>{
-s.classList.remove("active")
-})
-
-document.getElementById(btn.dataset.target).classList.add("active")
-
-document.querySelectorAll(".nav-btn").forEach(b=>{
-b.classList.remove("active")
-})
-
-btn.classList.add("active")
-
-window.scrollTo(0,0)
-
-}
-})
 
 </script>
 
